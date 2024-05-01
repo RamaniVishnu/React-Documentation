@@ -19,9 +19,22 @@ form.push('Taylor');
 Instead, replace the whole array by creating a new one:
 setForm([...form,'Taylor']);
 
+Code for Array:
+function App() {
+	const [name, setName] = useState(['ramnai']);
+	const [value,setValue]=useState('');
+
+	return (
+		<>
+			{name.map((elem)=><li>{elem}</li>)}
+			<input value={value} onChange={(e)=>setValue(e.target.value)} />
+			<button onClick={()=>setName((name)=>[...name,value])}>Add</button>
+		</>
+	);
+}
 
 
-Code:
+Code For Object:
 The current values can be updated and new key values are also added into the object 
 import React, { useState } from 'react';
 
