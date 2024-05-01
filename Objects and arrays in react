@@ -1,0 +1,74 @@
+Explanation:
+Updating objects and arrays in state 
+You can put objects and arrays into state. In React, state is considered read-only, so you should replace it rather than mutate your existing objects. For example, if you have a form object in state, don’t mutate it:
+
+For Object:-
+// 🚩 Don't mutate an object in state like this:
+form.firstName = 'Taylor';
+Instead, replace the whole object by creating a new one:
+
+// ✅ Replace state with a new object
+setForm({
+  ...form,
+  firstName: 'Taylor'
+});
+
+For Array: 
+// 🚩 Don't mutate an array in state like this:
+form.push('Taylor');
+Instead, replace the whole array by creating a new one:
+setForm([...form,'Taylor']);
+
+
+
+Code:
+The current values can be updated and new key values are also added into the object 
+import React, { useState } from 'react';
+
+function App() {
+  const [person, setPerson] = useState({
+    fname: "Ram",
+    lname: "Vishn"
+  });
+
+  const [newKey, setNewKey] = useState('');
+  const [newValue, setNewValue] = useState('');
+
+  const updateNames = (e) => {
+    const name = e.target.name;
+    setPerson({
+      ...person,
+      [name]: e.target.value
+    });
+  };
+
+  const addNewValues = () => {
+    if (newKey && newValue) {
+      setPerson({
+        ...person,
+        [newKey]: newValue
+      });
+      setNewKey('');
+      setNewValue('');
+    } else {
+      alert('Please enter both key and value.');
+    }
+  };
+
+  return (
+    <>
+      <input name="fname" onChange={updateNames} value={person.fname} />
+      <input name="lname" onChange={updateNames} value={person.lname} />
+      <input name="newKey" onChange={(e) => setNewKey(e.target.value)} value={newKey} placeholder="Enter key" />
+      <input name="newValue" onChange={(e) => setNewValue(e.target.value)} value={newValue} placeholder="Enter value" />
+      <button onClick={addNewValues}>Add</button>
+      <ul>
+        {Object.keys(person).map((key) => (
+          <li key={key}>{key}: {person[key]}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
+export default App;
