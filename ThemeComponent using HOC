@@ -1,0 +1,91 @@
+HOC in react
+
+What is a Higher-Order Component (HOC)?
+A Higher-Order Component (HOC) in React is a pattern used to reuse component logic. An HOC is a function that takes a component and returns a new component. It's analogous to higher-order functions in JavaScript, which take functions as arguments or return functions. The idea is to wrap a component to provide additional functionality or data injection without modifying its actual code.
+
+Why Use a Higher-Order Component?
+The primary use cases for HOCs include:
+
+Code Reusability: HOCs allow you to write reusable code that can be applied to multiple components. This helps in reducing the duplication of code and leads to cleaner and more maintainable codebases.
+Cross-Cutting Concerns: They are ideal for handling cross-cutting concerns like logging, monitoring, access control, and handling API data fetching elegantly.
+Conditional Rendering: HOCs can be used to conditionally render components based on certain criteria without polluting their internals.
+Props Manipulation: They can manipulate props before passing them to the wrapped component.
+When to Use a Higher-Order Component?
+Use HOCs when you notice that multiple components share common functionality, but are not related enough to perform a component inheritance (which is often discouraged in React in favor of composition). Typical scenarios include:
+
+Injecting props into components.
+Access control (e.g., components that require authentication).
+Handling lifecycle methods in a reusable manner.
+Adding additional state or methods to the existing components.
+
+Practical Scenario
+Suppose you are developing an application with multiple components that fetch data from an API. Each component needs to display a loading indicator while the data 
+is being fetched and handle the data once it is available. Instead of implementing the loading logic in every component, you create an HOC that encapsulates the loading 
+logic and reuse this HOC across all these components. This approach simplifies your components and keeps them focused on their primary responsibilities 
+(i.e., presenting the data), while the HOC handles the loading state uniformly across the application.
+
+Conclusion
+HOCs offer a powerful way to build reusable functionality in React applications. They help in achieving cleaner and more modular code by promoting the principle of
+separation of concerns. However, it's important to be mindful when using them as they can make the component hierarchy more complicated and the props flow less clear,
+especially in large applications.
+
+Example: scenario of theme sharing across component 
+HOC.js
+import React from 'react';
+
+function WithTheme(WrappedComp) {
+  return function WithThemedComp(props) {
+    const theme = props.themeName ? 'dark' : 'light';
+    const themeStyle = {
+      dark: {
+        backgroundColor: 'black',
+        color: "white",
+        fontSize: '16px'
+      },
+      light: {
+        backgroundColor: 'pink',
+        fontSize: '40px'
+      }
+    };
+
+    // Pass `style` directly to the WrappedComp
+    return <WrappedComp {...props} style={themeStyle[theme]} />
+  }
+}
+
+export default WithTheme;
+
+Message.js
+import React from 'react';
+
+export default function Message({ text, style }) {
+  return (
+    <div style={style}>
+      <h1>{text}</h1>
+    </div>
+  );
+}
+
+
+App.js
+import React, { useState } from 'react';
+import WithTheme from './WithTheme';
+import Message from './Message';
+
+const ThemedComp = WithTheme(Message);
+
+export default function App() {
+    const [chooseTheme, setTheme] = useState(false);
+
+    const toggleTheme = () => {
+        setTheme(!chooseTheme);
+    };
+
+    return (
+      <>
+        <ThemedComp text={`This is a ${chooseTheme ? 'dark' : 'light'} themed component`} themeName={chooseTheme} />
+        <button onClick={toggleTheme}>Select Theme</button>
+      </>
+    );
+}
+
