@@ -1,0 +1,63 @@
+“Lifting state up” means moving state from a child component to its parent so multiple components can share and stay in sync with the same data.
+
+
+Scenario:1 you have two buttons, each handles it own state values on click . Because the state is been handled inside the child comp(MyButton component)
+import { useState } from 'react';
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Counters that update separately</h1>
+      <MyButton />
+      <MyButton />
+    </div>
+  );
+}
+
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+Counters that update separately
+Clicked ->2 times
+Clicked ->3 times
+
+Lifting state up doesn’t mean sharing one value — it means centralizing control of state, even if values are separate.
+Eg:-
+Scenario: 2 you have two buttons and each handles it own state on click. But this time the state should be handled in parent and not in child. This is called lifting up the state.
+import  { useState },React from 'react';
+
+export default function App() {
+  const [count, setCount] = useState([0, 0]);
+
+  function btnClick(index) {
+    setCount((elem) => elem.map((val, i) => i === index ? val + 1 : val));
+  }
+  function MyButton({ value, handleClick }) {
+    return (
+      <>
+        <button onClick={handleClick}>clicked</button>
+        <p>{value}</p>
+      </>
+    );
+  }
+
+  return (
+    <div>
+      <MyButton value={count[0]} handleClick={()=>btnClick(0)} />
+      <MyButton value={count[1]} handleClick={()=>btnClick(1)} />
+    </div>
+  );
+}
+Counters that update separately
+Clicked ->2 times
+Clicked ->3 times
