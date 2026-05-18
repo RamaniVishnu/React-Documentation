@@ -1,0 +1,157 @@
+Passing values from one component to another is called as Props
+Notes:
+1)Parent → Child Flow
+2)React follows Unidirectional Data Flow
+    Data moves:
+    Parent → Child
+3)Props are read-only
+4)Child should not modify props
+
+1)Parent to child comp
+ParentComp
+import React from 'react';
+import ChildComp from './ChildComp';
+
+export default function ParentComp() {
+  return (
+    <>
+      <p>Parent comp....</p>
+      <ChildComp name="Ramani" empID="5678" />
+    </>
+  );
+}
+ChildComp:
+import React from 'react';
+
+export default function ChildComp(props) {
+ 
+  return (
+    <p>
+      Child comp....{props.name} {props.empID}
+    </p>
+  );
+}
+
+Child comp can also be written as
+a)import React from 'react';
+export default function ChildComp(props) {
+  const { name, empID } = props;           //type 1
+ 
+  return (
+    <p>
+      Child comp....{name} {empID}
+    </p>
+  );
+}
+
+b)import React from 'react';
+
+export default function ChildComp({name,empID}) {   //type2
+  return (
+    <p>
+      Child comp....{name} {empID}
+    </p>
+  );
+}
+c) if you want to pass the number values as typeof number then use {} from parentComp, in the above 1,2 types if u console log and check the empID type will be string
+ParentComp
+import React from 'react';
+import ChildComp from './ChildComp';
+
+export default function ParentComp() {
+  return (
+    <>
+      <p>Parent comp....</p>
+      <ChildComp name="Ramani" empID={5678} />  //use {} to pass as number
+    </>
+  );
+}
+ChildComp
+import React from 'react';
+export default function ChildComp({name,empID}) {
+  return (
+    <p>
+      Child comp....{name} {empID}
+    </p>
+  );
+}
+
+2)Default Props
+if the parent comp does not pass any value then default value can be used
+a)ParentComp
+import React from 'react';
+import ChildComp from './ChildComp';
+
+export default function ParentComp() {
+  return (
+    <>
+      <p>Parent comp....</p>
+      <ChildComp name="Ramani" empID={5678} />
+    </>
+  );
+}
+import React from 'react';
+
+export default function ChildComp({name = "Guest",empID}) {    //type1
+  return (
+    <p>
+      Child comp....{name} {empID}
+    </p>
+  );
+}
+b)import React from 'react';
+
+export default function ChildComp(props) {
+  const {name = 'Guest',empID} =props;             //type2
+  return (
+    <p>
+      Child comp....{name} {empID}
+    </p>
+  );
+}
+
+3)Parents can also pass functions as props
+import React from 'react';
+import ChildComp from './ChildComp';
+
+export default function ParentComp() {
+
+  function hanldeClick(){
+    alert('Button is clicked');
+  }
+  return (
+    <>
+      <p>Parent comp....</p>
+      <ChildComp  empID={5678} clickHandler={hanldeClick}/>
+    </>
+  );
+}
+import React from 'react';
+
+export default function ChildComp(props) {
+  const {name = 'Guest',empID,clickHandler} =props;
+  return (
+    <>
+    <p>
+      Child comp....{name} {empID}
+    </p>
+    <button onClick={clickHandler}>click me</button>
+    </>
+  );
+}
+
+4)Can rename the prop names in child comp
+import React from 'react';
+
+export default function ChildComp(props) {
+  const {name:ename = 'Guest',empID:eID,clickHandler:ParentFunc} =props;
+  return (
+    <>
+    <p>
+      Child comp....{ename} {eID}
+    </p>
+    <button onClick={ParentFunc}>click me</button>
+    </>
+  );
+}
+
