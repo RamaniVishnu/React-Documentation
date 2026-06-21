@@ -80,5 +80,41 @@ const Child = React.memo(({ user }) => {
   return <div>{user.name}</div>;
 });
 ============================================================================
+5)
+a)Explain batching in React.
+Batching is React's optimization mechanism where multiple state updates are grouped together and processed in a single render cycle, reducing unnecessary re-renders and improving performance.
 
+b)What changed in React 18 regarding batching?
+before react 18: Automatic batching happened only inside React event handlers.
+Automatic batching now works everywhere in react 18
+Event handlers ✅
+setTimeout ✅
+Promises ✅
+Async/Await ✅
+Native event listeners ✅
+
+eg: 
+execute this code in react 17 and below u will see console.log(render) twice on click.
+execute this code in react 18 and above u will see console.log(render) once on click.
+
+import React, { useState } from 'react';
+import './style.css';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [flag, setFlag] = useState(false);
+
+  console.log('render');
+
+  const handleClick = () => {
+    setTimeout(() => {
+      setCount((c) => c + 1);
+      setFlag((f) => !f);
+    }, 1000);
+  };
+
+  return <button onClick={handleClick}>Click</button>;
+}
+
+================================================================
 
