@@ -115,6 +115,8 @@ export default function App() {
 
   return <button onClick={handleClick}>Click</button>;
 }
-
+answer: React batches multiple state updates together and performs a single render for better performance.
+In React 17 and earlier, batching happened only inside React event handlers.
+React 18 introduced automatic batching across asynchronous boundaries such as promises, timeouts, and native event handlers.
 ================================================================
 
