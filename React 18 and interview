@@ -1,0 +1,84 @@
+1)What is Virtula DOM?
+The Virtual DOM is a lightweight, in-memory representation of the Real DOM.
+What it is: A tree of plain JavaScript objects that describes what the UI should look like.
+Why it's used: Directly updating the Real DOM (the actual browser UI) is slow and computationally expensive. Manipulating the Virtual DOM is much faster because nothing is being painted on the screen yet.
+=====================================================
+2) What is Re-render?
+A re-render is the process where React calls your component function to generate a new Virtual DOM tree.
+What triggers it: A change in a component's state or props.What happens: React runs the component code to figure out the new intended state of the UI.
+It just produces a new Virtual DOM snapshot.
+
+v.v.v.vimp React's rendering process consists of two phases:
+Render Phase – React creates the new Virtual DOM and performs reconciliation.
+Commit Phase – React updates the real DOM and runs lifecycle effects.
+========================================================
+3)What is Reconciliation?
+Reconciliation (often referred to as the "diffing" algorithm) is the process of comparing the new Virtual DOM tree with the previous Virtual DOM tree.
+What it does: React uses this algorithm to identify exactly what has changed (what nodes were added, removed, or updated).
+The result: It creates a minimal list of changes needed to update the Real DOM. The actual process of applying these changes to the browser is called the "commit phase".
+========================================================
+4)What causes a component to re-render?
+- State changes
+-Props change
+-Parent component re-renders: Even if props haven't changed, the child re-renders unless optimized with React.memo.
+- A consumed context value changes.
+- A subscribed global state changes.
+- Its key changes or a force update occurs.
+=========================================================
+5)When the button is clicked:
+a)Will Child re-render?
+b)Why?
+c)How can you prevent it from re-rendering?
+d)When does React.memo NOT help
+function Parent() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+      <Child />
+    </>
+  );
+}
+
+function Child() {
+  console.log("Child rendered");
+  return <div>Child</div>;
+}
+answer: 
+a) Initial render:Parent Render
+Child Render
+After clicking the button:
+Parent Render
+Child Render
+Every click causes both components to render again.
+
+b)When Parent re-renders, React executes its JSX again. This recreates the <Child /> element, so React also re-renders Child by default, even though Child has no state or props.
+
+c)Use React.memo.
+
+d)When reference values are passed and new references are created.
+solution:
+function Parent() {
+  const [count, setCount] = useState(0);
+
+ const user = useMemo(() => ({ name: "John" }), []);         -------------->solution //avoids creating a new object on every render.
+  return (
+    <>
+      <button onClick={() => setCount(c => c + 1)}>
+        Increment
+      </button>
+      <Child user={user} />
+    </>
+  );
+}
+
+const Child = React.memo(({ user }) => {
+  console.log("Child Render");
+  return <div>{user.name}</div>;
+});
+============================================================================
+
+
