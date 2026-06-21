@@ -119,4 +119,30 @@ answer: React batches multiple state updates together and performs a single rend
 In React 17 and earlier, batching happened only inside React event handlers.
 React 18 introduced automatic batching across asynchronous boundaries such as promises, timeouts, and native event handlers.
 ================================================================
+6) What is immer?
+prev is the current state provided by React’s functional state update. produce from Immer takes this state and gives us a proxy object called draft,
+which allows us to write mutation-like logic. However, Immer tracks these mutations internally and returns a new immutable state object without modifying the original one.
+This makes deep state updates simpler while still preserving immutability, which React depends on for change detection.
 
+without immer
+setUser(prev => ({
+  ...prev,
+  profile: {
+    ...prev.profile,
+    settings: {
+      ...prev.profile.settings,
+      theme: {
+        ...prev.profile.settings.theme,
+        color: "dark"
+      }
+    }
+  }
+}));
+
+with immer
+setUser(prev =>
+  produce(prev, draft => {
+    draft.profile.settings.theme.color = "dark";
+  })
+);
+================================================================
